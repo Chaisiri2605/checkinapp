@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time Tracking</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #121212;
+            color: #ffffff;
+        }
+        .container {
+            text-align: center;
+            background: #1e1e1e;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            width: 300px;
+        }
+        .time {
+            font-size: 2em;
+            margin-bottom: 20px;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 1em;
+            color: #ffffff;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #4CAF50;
+            border-radius: 5px;
+            font-size: 1em;
+            background-color: #2a2a2a;
+            color: #ffffff;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            font-size: 1em;
+            margin-bottom: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .log-time {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .log-time:hover {
+            background-color: #45a049;
+        }
+        .view-logs {
+            background-color: #2196F3;
+            color: white;
+        }
+        .view-logs:hover {
+            background-color: #1e88e5;
+        }
+        .back {
+            background-color: #757575;
+            color: white;
+        }
+        .back:hover {
+            background-color: #616161;
+        }
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const timeElement = document.querySelector(".time");
+            const employeeIdInput = document.getElementById("employee-id");
+            const logTimeButton = document.querySelector(".log-time");
+            const viewLogsButton = document.querySelector(".view-logs");
+
+            const logs = [];
+
+            // Update time dynamically
+            function updateTime() {
+                const now = new Date();
+                const hours = String(now.getHours()).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                const ampm = hours >= 12 ? 'PM' : 'AM';
+                const formattedTime = `${hours}:${minutes} ${ampm}`;
+                timeElement.textContent = formattedTime;
+            }
+            updateTime();
+            setInterval(updateTime, 1000);
+
+            // Handle log time button click
+            logTimeButton.addEventListener("click", () => {
+                const employeeId = employeeIdInput.value.trim();
+                if (employeeId) {
+                    const logData = {
+                        employeeId,
+                        timestamp: new Date().toLocaleString(),
+                    };
+                    logs.push(logData);
+                    alert("ลงเวลาเรียบร้อย!");
+                    employeeIdInput.value = ""; // Clear input
+                } else {
+                    alert("กรุณากรอกรหัสพนักงาน");
+                }
+            });
+
+            // Handle view logs button click
+            viewLogsButton.addEventListener("click", () => {
+                document.body.innerHTML = `
+                    <div class="container">
+                        <h2>ข้อมูลการลงเวลา</h2>
+                        <ul style="text-align: left; padding: 0; list-style: none;">
+                            ${logs.map(log => `<li>รหัสพนักงาน: ${log.employeeId} | เวลา: ${log.timestamp}</li>`).join('')}
+                        </ul>
+                        <button class="back">ย้อนกลับ</button>
+                    </div>
+                `;
+
+                document.querySelector(".back").addEventListener("click", () => location.reload());
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="time">08:15 AM.</div>
+        <label for="employee-id">กรอกรหัสพนักงาน</label>
+        <input type="text" id="employee-id" placeholder="รหัสพนักงาน">
+        <button class="log-time">ลงเวลา</button>
+        <button class="view-logs">ดูข้อมูลการลงเวลา</button>
+    </div>
+</body>
+</html>
